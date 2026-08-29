@@ -8,6 +8,7 @@ export interface FacilityItem {
   badge?: string;
   iconName: string;
   imageAlt: string;
+  accent?: string;
 }
 
 export interface ReservationSlot {
@@ -22,4 +23,21 @@ export interface StepItem {
   description: string;
   highlights: string[];
   icon: string;
+}
+
+export type ReservationStatus = 'new' | 'contacting' | 'confirmed' | 'completed' | 'cancelled';
+
+export interface ReservationData {
+  id: string;
+  facility: string; // 'outdoor' | 'screen' | 'lesson'
+  facilityLabel: string;
+  date: string;
+  timeSlot: string;
+  name: string;
+  phone: string;
+  peopleCount: string;
+  memo?: string;
+  status: ReservationStatus;
+  createdAt: string;
+  price?: number;
 }
