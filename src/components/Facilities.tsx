@@ -30,7 +30,8 @@ export const Facilities: React.FC = () => {
         '주간 및 야간 조명 완비로 쾌적한 연습 가능'
       ],
       icon: Building2,
-      tag: '실외 시설'
+      tag: '실외 시설',
+      accent: 'from-emerald-500/20 to-teal-500/10'
     },
     {
       id: 'screen',
@@ -46,7 +47,8 @@ export const Facilities: React.FC = () => {
         '초보자도 쉽고 재미있게 적응하는 게임 모드'
       ],
       icon: Monitor,
-      tag: '실내 스크린'
+      tag: '실내 스크린',
+      accent: 'from-teal-500/20 to-cyan-500/10'
     },
     {
       id: 'lesson',
@@ -62,7 +64,8 @@ export const Facilities: React.FC = () => {
         '실제 필드 룰 및 매너, 코스 공략 노하우 전수'
       ],
       icon: Users,
-      tag: '전문 교육'
+      tag: '전문 교육',
+      accent: 'from-emerald-600/20 to-emerald-400/10'
     },
     {
       id: 'shop',
@@ -78,7 +81,8 @@ export const Facilities: React.FC = () => {
         '전문가의 체형별 맞춤 장비 상담 및 피팅 가이드'
       ],
       icon: ShoppingBag,
-      tag: '용품 샵'
+      tag: '용품 샵',
+      accent: 'from-amber-500/20 to-amber-300/10'
     },
     {
       id: 'rental',
@@ -94,7 +98,8 @@ export const Facilities: React.FC = () => {
         '음료 및 휴게 라운지 편의시설 이용 지원'
       ],
       icon: CalendarCheck,
-      tag: '대여·대관'
+      tag: '대여·대관',
+      accent: 'from-teal-600/20 to-emerald-500/10'
     }
   ];
 
@@ -103,11 +108,11 @@ export const Facilities: React.FC = () => {
     : facilityList.filter(item => item.category === filter);
 
   return (
-    <section id="facilities" className="py-20 px-4 sm:px-6 lg:px-8 relative">
+    <section id="facilities" className="py-24 px-4 sm:px-6 lg:px-8 relative bg-[#050e08]/60">
       <div className="max-w-7xl mx-auto">
         {/* 섹션 헤더 */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-900/40 border border-emerald-500/30 text-emerald-300 text-xs font-bold mb-3">
+        <div className="text-center max-w-3xl mx-auto mb-14">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-950/80 border border-emerald-500/30 text-emerald-300 text-xs font-bold mb-3 shadow-inner">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
             <span>최고의 시설과 프리미엄 서비스</span>
           </div>
@@ -119,7 +124,7 @@ export const Facilities: React.FC = () => {
             옥상 350평 실외 숏게임장부터 최신 스크린, 맞춤 레슨, 공식 용품샵, 대여까지 완벽하게 준비되어 있습니다.
           </p>
 
-          {/* 필터 탭 */}
+          {/* 필터 탭 (21st.dev 알약형 탭) */}
           <div className="flex flex-wrap items-center justify-center gap-2 mt-8">
             {[
               { label: '전체 보기', value: 'all' },
@@ -130,10 +135,10 @@ export const Facilities: React.FC = () => {
               <button
                 key={tab.value}
                 onClick={() => setFilter(tab.value)}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+                className={`px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-200 ${
                   filter === tab.value
-                    ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/30'
-                    : 'bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800'
+                    ? 'bg-emerald-500 text-black shadow-[0_0_20px_rgba(16,185,129,0.4)] scale-105'
+                    : 'bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800/80 hover:border-slate-700'
                 }`}
               >
                 {tab.label}
@@ -142,7 +147,7 @@ export const Facilities: React.FC = () => {
           </div>
         </div>
 
-        {/* 시설 카드 그리드 */}
+        {/* 21st.dev 스타일 하이엔드 카드 그리드 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredList.map((item, index) => {
             const Icon = item.icon;
@@ -153,24 +158,24 @@ export const Facilities: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                className="glass-card glass-card-hover rounded-3xl p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden border border-emerald-500/20"
+                transition={{ duration: 0.4, delay: index * 0.08 }}
+                className="pro-glass-card rounded-3xl p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden group"
               >
                 {/* 상단 뱃지 & 아이콘 */}
                 <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs font-bold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                  <div className="flex items-center justify-between mb-5">
+                    <span className="text-xs font-bold px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
                       {item.tag}
                     </span>
-                    <div className="p-3 rounded-2xl bg-emerald-950/80 text-emerald-400 border border-emerald-500/30">
-                      <Icon className="w-6 h-6" />
+                    <div className="p-3 rounded-2xl bg-emerald-950/80 text-emerald-400 border border-emerald-500/30 transition-transform duration-300 group-hover:scale-110 group-hover:border-emerald-400">
+                      <Icon className="w-5 h-5" />
                     </div>
                   </div>
 
-                  <h3 className="text-xl sm:text-2xl font-black text-white mb-1">
+                  <h3 className="text-xl sm:text-2xl font-black text-white mb-1.5 group-hover:text-emerald-300 transition-colors">
                     {item.title}
                   </h3>
-                  <p className="text-xs font-semibold text-emerald-400 mb-3">
+                  <p className="text-xs font-semibold text-emerald-400 mb-3.5">
                     {item.subtitle}
                   </p>
                   <p className="text-slate-300 text-xs sm:text-sm leading-relaxed mb-6">
@@ -178,11 +183,11 @@ export const Facilities: React.FC = () => {
                   </p>
                 </div>
 
-                {/* 특장점 체크리스트 */}
+                {/* 특장점 체크리스트 & 액션 */}
                 <div>
-                  <div className="space-y-2 border-t border-emerald-900/40 pt-4 mb-6">
+                  <div className="space-y-2.5 border-t border-emerald-900/40 pt-4 mb-6">
                     {item.features.map((feat, fIdx) => (
-                      <div key={fIdx} className="flex items-start gap-2 text-xs sm:text-sm text-slate-300">
+                      <div key={fIdx} className="flex items-start gap-2 text-xs sm:text-sm text-slate-200">
                         <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                         <span>{feat}</span>
                       </div>
@@ -191,7 +196,7 @@ export const Facilities: React.FC = () => {
 
                   <a
                     href="#reservation"
-                    className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-950/60 hover:bg-emerald-900/80 border border-emerald-500/30 text-emerald-300 hover:text-white text-xs sm:text-sm font-bold transition-all"
+                    className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-full bg-emerald-950/60 hover:bg-emerald-900/80 border border-emerald-500/30 text-emerald-300 hover:text-white text-xs sm:text-sm font-bold transition-all duration-200 group-hover:border-emerald-400/50"
                   >
                     <span>2시간 예약 & 이용 문의</span>
                     <ArrowUpRight className="w-4 h-4" />
@@ -207,7 +212,7 @@ export const Facilities: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mt-12 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-emerald-950 via-slate-900 to-teal-950 border border-emerald-500/30 flex flex-col sm:flex-row items-center justify-between gap-6"
+          className="mt-14 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-emerald-950/90 via-slate-900/90 to-teal-950/90 border border-emerald-500/30 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-2xl"
         >
           <div className="space-y-2 text-center sm:text-left">
             <div className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-400">
@@ -223,7 +228,7 @@ export const Facilities: React.FC = () => {
           </div>
           <a
             href="tel:010-7467-2080"
-            className="shrink-0 inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold text-sm shadow-lg shadow-emerald-500/25 transition-transform hover:scale-105 active:scale-95"
+            className="shrink-0 inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold text-sm shadow-[0_0_25px_rgba(16,185,129,0.35)] transition-transform duration-300 hover:scale-105 active:scale-95"
           >
             <Phone className="w-4 h-4" />
             <span>단체 대관 문의: 010-7467-2080</span>

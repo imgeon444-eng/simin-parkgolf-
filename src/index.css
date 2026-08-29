@@ -11,11 +11,21 @@
     position: relative;
   }
   body {
-    background-color: #060d09;
+    background-color: #050b07;
     color: #f1f5f9;
   }
   * {
     box-sizing: border-box;
+  }
+}
+
+/* 21st.dev 스타일 Border Beam 애니메이션 */
+@keyframes border-beam {
+  0% {
+    offset-distance: 0%;
+  }
+  100% {
+    offset-distance: 100%;
   }
 }
 
@@ -45,22 +55,33 @@
   }
 }
 
-/* 글래스모피즘 효과 */
-.glass-card {
-  background: rgba(18, 32, 24, 0.65);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(52, 211, 153, 0.15);
+/* 21st.dev 하이엔드 글래스모피즘 & 스포트라이트 카드 */
+.pro-glass-card {
+  background: linear-gradient(
+    135deg,
+    rgba(16, 32, 23, 0.7) 0%,
+    rgba(8, 18, 12, 0.85) 100%
+  );
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(52, 211, 153, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.glass-card-hover {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.glass-card-hover:hover {
-  background: rgba(22, 43, 31, 0.85);
-  border-color: rgba(52, 211, 153, 0.35);
-  box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.25);
+.pro-glass-card:hover {
+  border-color: rgba(52, 211, 153, 0.45);
+  box-shadow: 0 16px 40px -12px rgba(16, 185, 129, 0.35);
   transform: translateY(-4px);
+}
+
+/* Shimmer Button 효과 */
+.shimmer-btn {
+  background-size: 200% auto;
+  transition: 0.5s;
+}
+.shimmer-btn:hover {
+  background-position: right center;
 }
 
 /* 부드러운 스크롤바 */
@@ -68,10 +89,10 @@
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #060d09;
+  background: #050b07;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e3a29;
+  background: #153221;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
