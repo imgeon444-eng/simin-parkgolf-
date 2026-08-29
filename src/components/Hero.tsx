@@ -83,13 +83,14 @@ export const Hero: React.FC = () => {
           배우는 곳과 연습하는 곳이 따로 필요할까요?
         </motion.p>
 
+        {/* 중복된 '에서'를 정리하여 자연스럽고 세련된 타이틀 완성 */}
         <motion.h1
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.9, delay: 0.3 }}
           className="text-3xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.1] mb-6 text-white drop-shadow-[0_8px_30px_rgba(0,0,0,0.95)]"
         >
-          시민파크골프에서 <br />
+          시민파크골프, <br />
           <span className="google-flow-text drop-shadow-[0_4px_30px_rgba(16,185,129,0.7)]">
             한 곳에서 모두 완성
           </span>
