@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Phone, Menu, X, Clock, MapPin, Sparkles } from 'lucide-react';
+import { Phone, Menu, X, Clock, Sparkles } from 'lucide-react';
 
-const LOGO_URL = "https://d8j0ntlcm91z4.cloudfront.net/user_3HvuzUUgeSKHRW33QJ4n4sNshmM/hf_20260828_130338_ae415fa1-12fa-4377-819d-f76193bfcac0.svg";
+const LOGO_PATH = "images/logo.svg";
 
 export const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -37,25 +37,25 @@ export const Header: React.FC = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          {/* 브랜드 로고 & 타이틀 */}
+          {/* 브랜드 로고 & 타이틀 (사각 경계선 없는 투명 로고) */}
           <a href="#" className="flex items-center gap-3 group">
-            <div className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-900/40 border border-emerald-500/30 p-1.5 flex items-center justify-center transition-transform group-hover:scale-105">
+            <div className="relative w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center transition-transform group-hover:scale-105">
               <img
-                src={LOGO_URL}
+                src={LOGO_PATH}
                 alt="시민파크골프 로고"
-                className="w-full h-full object-contain filter drop-shadow-[0_2px_8px_rgba(16,185,129,0.5)]"
+                className="w-full h-full object-contain filter drop-shadow-[0_2px_10px_rgba(34,197,94,0.4)]"
               />
             </div>
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5">
-                <span className="text-xl sm:text-2xl font-black tracking-tight text-white group-hover:text-emerald-400 transition-colors">
+                <span className="text-xl sm:text-2xl font-black tracking-tight text-white group-hover:text-emerald-400 transition-colors drop-shadow">
                   시민파크골프
                 </span>
                 <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                   옥상 350평
                 </span>
               </div>
-              <span className="text-[11px] sm:text-xs text-slate-400 font-medium tracking-wide">
+              <span className="text-[11px] sm:text-xs text-slate-300 font-medium tracking-wide drop-shadow">
                 부산 사상구 르네시떼 6층 복합 교육센터
               </span>
             </div>
@@ -67,7 +67,7 @@ export const Header: React.FC = () => {
               <a
                 key={link.name}
                 href={link.href}
-                className="text-sm font-semibold text-slate-300 hover:text-emerald-400 transition-colors relative py-1 group"
+                className="text-sm font-semibold text-slate-200 hover:text-emerald-400 transition-colors relative py-1 group drop-shadow"
               >
                 {link.name}
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-emerald-400 transition-all duration-300 group-hover:w-full" />
@@ -78,10 +78,10 @@ export const Header: React.FC = () => {
           {/* 우측 빠른 통화 CTA */}
           <div className="hidden lg:flex items-center gap-3">
             <div className="text-right mr-1">
-              <div className="text-[11px] text-emerald-400 font-semibold flex items-center justify-end gap-1">
+              <div className="text-[11px] text-emerald-400 font-semibold flex items-center justify-end gap-1 drop-shadow">
                 <Clock className="w-3 h-3" /> AM 11:00 ~ PM 09:00
               </div>
-              <div className="text-xs text-slate-400">실내/실외 2시간 예약제</div>
+              <div className="text-xs text-slate-300 drop-shadow">실내/실외 2시간 예약제</div>
             </div>
             <a
               href="tel:010-7467-2080"

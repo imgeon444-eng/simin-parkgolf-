@@ -1,19 +1,19 @@
 import React from 'react';
 import { Phone, MapPin, Clock, Car, Shield, Sparkles } from 'lucide-react';
 
-const LOGO_URL = "https://d8j0ntlcm91z4.cloudfront.net/user_3HvuzUUgeSKHRW33QJ4n4sNshmM/hf_20260828_130338_ae415fa1-12fa-4377-819d-f76193bfcac0.svg";
+const LOGO_PATH = "images/logo.svg";
 
 export const Footer: React.FC = () => {
   return (
     <footer className="bg-[#040806] border-t border-emerald-950 text-slate-400 text-xs py-14 px-4 sm:px-6 lg:px-8 pb-24 md:pb-14">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-10">
-          {/* 브랜드 소개 */}
+          {/* 브랜드 소개 (투명 로고 적용) */}
           <div className="md:col-span-5 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/30 p-1 flex items-center justify-center">
+              <div className="w-10 h-10 flex items-center justify-center">
                 <img
-                  src={LOGO_URL}
+                  src={LOGO_PATH}
                   alt="시민파크골프 로고"
                   className="w-full h-full object-contain"
                 />
