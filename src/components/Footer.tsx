@@ -1,13 +1,9 @@
 import React from 'react';
-import { Phone, MapPin, Clock, Car, LayoutDashboard } from 'lucide-react';
+import { Phone, MapPin, Clock, Car } from 'lucide-react';
 
 const LOGO_PATH = "images/logo.svg";
 
-interface FooterProps {
-  onOpenAdmin?: () => void;
-}
-
-export const Footer: React.FC<FooterProps> = ({ onOpenAdmin }) => {
+export const Footer: React.FC = () => {
   return (
     <footer className="bg-[#030704] border-t border-emerald-950 text-slate-400 text-xs py-14 px-4 sm:px-6 lg:px-8 pb-24 md:pb-14">
       <div className="max-w-7xl mx-auto">
@@ -72,17 +68,6 @@ export const Footer: React.FC<FooterProps> = ({ onOpenAdmin }) => {
               <li><a href="#facilities" className="hover:text-emerald-400 transition-colors">350평 옥상 숏게임장 & 퍼팅장</a></li>
               <li><a href="#facilities" className="hover:text-emerald-400 transition-colors">실내 스크린 파크골프</a></li>
               <li><a href="#reservation" className="hover:text-emerald-400 transition-colors">실내·실외 2시간 예약하기</a></li>
-              {onOpenAdmin && (
-                <li className="pt-1">
-                  <button
-                    onClick={onOpenAdmin}
-                    className="text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold"
-                  >
-                    <LayoutDashboard className="w-3.5 h-3.5" />
-                    <span>원장님 전용 CRM 칸반보드</span>
-                  </button>
-                </li>
-              )}
             </ul>
           </div>
         </div>

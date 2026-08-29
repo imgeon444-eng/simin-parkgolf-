@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Phone, Menu, X, Clock, LayoutDashboard } from 'lucide-react';
+import { Phone, Menu, X, Clock } from 'lucide-react';
 
 const LOGO_PATH = "images/logo.svg";
 
-interface HeaderProps {
-  onOpenAdmin?: () => void;
-}
-
-export const Header: React.FC<HeaderProps> = ({ onOpenAdmin }) => {
+export const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -73,7 +69,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAdmin }) => {
             </div>
           </a>
 
-          {/* 21st.dev 스타일 데스크톱 네비게이션 */}
+          {/* 데스크톱 네비게이션 */}
           <nav className="hidden md:flex items-center gap-1 lg:gap-2">
             {navLinks.map((link) => (
               <a
@@ -88,17 +84,6 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAdmin }) => {
 
           {/* 우측 빠른 통화 CTA */}
           <div className="hidden lg:flex items-center gap-2.5 shrink-0">
-            {onOpenAdmin && (
-              <button
-                onClick={onOpenAdmin}
-                className="px-3 py-1.5 rounded-full bg-slate-900/80 hover:bg-emerald-950/80 border border-slate-700 hover:border-emerald-500/40 text-slate-300 hover:text-emerald-300 text-xs font-semibold flex items-center gap-1 transition-all"
-                title="원장님 전용 CRM 칸반보드"
-              >
-                <LayoutDashboard className="w-3.5 h-3.5 text-amber-400" />
-                <span>CRM</span>
-              </button>
-            )}
-
             {!isScrolled && (
               <div className="text-right mr-1">
                 <div className="text-[11px] text-emerald-400 font-semibold flex items-center justify-end gap-1 drop-shadow">
@@ -154,18 +139,6 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAdmin }) => {
               {link.name}
             </a>
           ))}
-          {onOpenAdmin && (
-            <button
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                onOpenAdmin();
-              }}
-              className="w-full text-left text-sm font-semibold text-amber-300 hover:text-amber-200 py-2 px-2 rounded-lg hover:bg-slate-900/60 flex items-center gap-2"
-            >
-              <LayoutDashboard className="w-4 h-4" />
-              <span>원장님 전용 CRM 칸반보드</span>
-            </button>
-          )}
           <div className="pt-1">
             <a
               href="tel:010-7467-2080"
