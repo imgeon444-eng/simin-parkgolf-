@@ -9,94 +9,39 @@ import {
   onSnapshot, 
   query, 
   orderBy, 
-  Firestore 
+  Firestore,
+  serverTimestamp
 } from 'firebase/firestore';
 import { ReservationData, ReservationStatus } from '../types';
 
-// 💡 Firebase 설정 (추후 Firebase Console에서 발급받은 키를 여기에 넣으면 실제 Cloud DB와 100% 연동됩니다)
-const env = (import.meta as any).env || {};
+// 🔥 사용자 실제 Firebase 프로젝트 설정 (parkgolf-10d78)
 const firebaseConfig = {
-  apiKey: env.VITE_FIREBASE_API_KEY || "",
-  authDomain: env.VITE_FIREBASE_AUTH_DOMAIN || "",
-  projectId: env.VITE_FIREBASE_PROJECT_ID || "",
-  storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET || "",
-  messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
-  appId: env.VITE_FIREBASE_APP_ID || ""
+  apiKey: "AIzaSyCtHY561ZPLlnrKPemFfcw22ZuwleDs3f4",
+  authDomain: "parkgolf-10d78.firebaseapp.com",
+  projectId: "parkgolf-10d78",
+  storageBucket: "parkgolf-10d78.firebasestorage.app",
+  messagingSenderId: "224022880419",
+  appId: "1:224022880419:web:9350fe47b008d4ecf85f16",
+  measurementId: "G-MBVL2DQTPP"
 };
 
-let app: FirebaseApp | null = null;
-let db: Firestore | null = null;
+let app: FirebaseApp;
+let db: Firestore;
 
-// Firebase 설정이 유효한지 확인
-const isFirebaseConfigured = Boolean(firebaseConfig.projectId && firebaseConfig.apiKey);
-
-if (isFirebaseConfigured) {
-  try {
-    app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-    db = getFirestore(app);
-    console.log("🔥 Firebase Firestore Connected Successfully!");
-  } catch (error) {
-    console.warn("Firebase initialization failed, running in Smart LocalStorage mode:", error);
-  }
+try {
+  app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+  db = getFirestore(app);
+  console.log("🔥 Google Cloud Firestore Connected Successfully to 'parkgolf-10d78'!");
+} catch (error) {
+  console.error("Firebase initialization failed:", error);
 }
 
-// 📦 로컬 스토리지 키
+// 📦 로컬 백업 스토리지 키
 const LOCAL_STORAGE_KEY = 'simin_parkgolf_reservations_v1';
 
-// 초기 데모 데이터 생성기
-const getInitialDemoData = (): ReservationData[] => {
-  const today = new Date().toISOString().split('T')[0];
-  return [
-    {
-      id: 'demo-1',
-      facility: 'outdoor',
-      facilityLabel: '옥상 350평 실외 숏게임장',
-      date: today,
-      timeSlot: '13:00 ~ 15:00',
-      name: '김태호',
-      phone: '010-8912-3456',
-      peopleCount: '4',
-      memo: '동호회 4인 숏게임 및 퍼팅 집중 연습 희망',
-      status: 'new',
-      createdAt: new Date(Date.now() - 1000 * 60 * 15).toISOString(),
-    },
-    {
-      id: 'demo-2',
-      facility: 'lesson',
-      facilityLabel: '파크골프 전문 1:1 레슨',
-      date: today,
-      timeSlot: '15:00 ~ 17:00',
-      name: '이영희',
-      phone: '010-5421-9876',
-      peopleCount: '1',
-      memo: '초보 입문 기본기 레슨 상담 희망',
-      status: 'contacting',
-      createdAt: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
-    },
-    {
-      id: 'demo-3',
-      facility: 'screen',
-      facilityLabel: '실내 스크린 파크골프 타석',
-      date: today,
-      timeSlot: '11:00 ~ 13:00',
-      name: '박준형',
-      phone: '010-3344-7788',
-      peopleCount: '2',
-      memo: '2인 스크린 코스 연습',
-      status: 'confirmed',
-      createdAt: new Date(Date.now() - 1000 * 60 * 180).toISOString(),
-    }
-  ];
-};
-
-// 로컬 데이터 읽기
 const getLocalReservations = (): ReservationData[] => {
   const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-  if (!stored) {
-    const initial = getInitialDemoData();
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(initial));
-    return initial;
-  }
+  if (!stored) return [];
   try {
     return JSON.parse(stored);
   } catch {
@@ -104,58 +49,76 @@ const getLocalReservations = (): ReservationData[] => {
   }
 };
 
-// 로컬 데이터 저장 및 브로드캐스트 이벤트 발생
 const saveLocalReservations = (data: ReservationData[]) => {
   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
   window.dispatchEvent(new CustomEvent('reservation-updated', { detail: data }));
 };
 
 // ==============================================================
-// 🚀 1. 실시간 예약 신청 (Firestore / LocalStorage)
+// 🚀 1. 실시간 예약 신청 (Google Firestore DB에 실시간 저장)
 // ==============================================================
 export const createReservation = async (reservation: Omit<ReservationData, 'id' | 'createdAt' | 'status'>): Promise<string> => {
-  const newReservation: ReservationData = {
+  const now = new Date().toISOString();
+  const payload = {
     ...reservation,
-    id: 'res-' + Date.now().toString(36) + Math.random().toString(36).substring(2, 5),
-    status: 'new',
-    createdAt: new Date().toISOString()
+    status: 'new' as ReservationStatus,
+    createdAt: now,
+    serverTimestamp: serverTimestamp()
   };
 
   if (db) {
     try {
-      const docRef = await addDoc(collection(db, 'reservations'), {
-        ...newReservation,
-        createdAt: new Date().toISOString()
-      });
+      const docRef = await addDoc(collection(db, 'reservations'), payload);
+      console.log("✅ Reservation successfully stored in Cloud Firestore! ID:", docRef.id);
       return docRef.id;
     } catch (e) {
-      console.warn("Firestore save failed, fallback to local:", e);
+      console.warn("Firestore Cloud save error, saving to local backup:", e);
     }
   }
 
   // Local fallback
+  const localItem: ReservationData = {
+    ...reservation,
+    id: 'res-' + Date.now().toString(36),
+    status: 'new',
+    createdAt: now
+  };
   const current = getLocalReservations();
-  const updated = [newReservation, ...current];
-  saveLocalReservations(updated);
-  return newReservation.id;
+  saveLocalReservations([localItem, ...current]);
+  return localItem.id;
 };
 
 // ==============================================================
-// 🚀 2. 실시간 CRM 칸반 데이터 구독 (onSnapshot / Event Listener)
+// 🚀 2. 실시간 CRM 칸반 데이터 구독 (Firestore onSnapshot 리스너)
 // ==============================================================
 export const subscribeReservations = (callback: (reservations: ReservationData[]) => void): (() => void) => {
   if (db) {
     try {
       const q = query(collection(db, 'reservations'), orderBy('createdAt', 'desc'));
       return onSnapshot(q, (snapshot) => {
-        const items: ReservationData[] = snapshot.docs.map((d) => ({
-          id: d.id,
-          ...(d.data() as Omit<ReservationData, 'id'>)
-        }));
+        const items: ReservationData[] = snapshot.docs.map((d) => {
+          const data = d.data();
+          return {
+            id: d.id,
+            facility: data.facility || 'outdoor',
+            facilityLabel: data.facilityLabel || '옥상 350평 실외 숏게임장',
+            date: data.date || '',
+            timeSlot: data.timeSlot || '',
+            name: data.name || '',
+            phone: data.phone || '',
+            peopleCount: data.peopleCount || '2',
+            memo: data.memo || '',
+            status: (data.status as ReservationStatus) || 'new',
+            createdAt: data.createdAt || new Date().toISOString()
+          };
+        });
         callback(items);
+      }, (error) => {
+        console.warn("Firestore real-time subscription error, fallback to local:", error);
+        callback(getLocalReservations());
       });
     } catch (e) {
-      console.warn("Firestore subscription failed, fallback to local:", e);
+      console.warn("Firestore listener setup error:", e);
     }
   }
 
@@ -164,18 +127,10 @@ export const subscribeReservations = (callback: (reservations: ReservationData[]
   const handleUpdate = (e: any) => {
     callback(e.detail || getLocalReservations());
   };
-  const handleStorage = (e: StorageEvent) => {
-    if (e.key === LOCAL_STORAGE_KEY) {
-      callback(getLocalReservations());
-    }
-  };
-
   window.addEventListener('reservation-updated', handleUpdate);
-  window.addEventListener('storage', handleStorage);
 
   return () => {
     window.removeEventListener('reservation-updated', handleUpdate);
-    window.removeEventListener('storage', handleStorage);
   };
 };
 
@@ -183,13 +138,17 @@ export const subscribeReservations = (callback: (reservations: ReservationData[]
 // 🚀 3. CRM 예약 상태 변경 (신규 -> 상담중 -> 확정 -> 완료)
 // ==============================================================
 export const updateReservationStatus = async (id: string, newStatus: ReservationStatus): Promise<void> => {
-  if (db) {
+  if (db && !id.startsWith('res-')) {
     try {
       const docRef = doc(db, 'reservations', id);
-      await updateDoc(docRef, { status: newStatus });
+      await updateDoc(docRef, { 
+        status: newStatus,
+        updatedAt: new Date().toISOString()
+      });
+      console.log(`✅ Status updated to ${newStatus} for reservation ${id}`);
       return;
     } catch (e) {
-      console.warn("Firestore update failed, fallback to local:", e);
+      console.warn("Firestore update error, updating local:", e);
     }
   }
 
@@ -202,12 +161,13 @@ export const updateReservationStatus = async (id: string, newStatus: Reservation
 // 🚀 4. 예약 삭제
 // ==============================================================
 export const deleteReservation = async (id: string): Promise<void> => {
-  if (db) {
+  if (db && !id.startsWith('res-')) {
     try {
       await deleteDoc(doc(db, 'reservations', id));
+      console.log(`✅ Reservation ${id} deleted from Firestore`);
       return;
     } catch (e) {
-      console.warn("Firestore delete failed, fallback to local:", e);
+      console.warn("Firestore delete error, deleting local:", e);
     }
   }
 
