@@ -3,12 +3,19 @@
 @tailwind utilities;
 
 @layer base {
-  html {
+  html, body {
     scroll-behavior: smooth;
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    position: relative;
   }
   body {
     background-color: #060d09;
     color: #f1f5f9;
+  }
+  * {
+    box-sizing: border-box;
   }
 }
 
@@ -38,20 +45,6 @@
   }
 }
 
-/* 비디오 텍스트 마스킹 래퍼 */
-.video-text-mask-container {
-  position: relative;
-  overflow: hidden;
-  display: inline-block;
-}
-
-.video-mask-text {
-  background-color: #060d09;
-  color: white;
-  mix-blend-mode: multiply;
-  user-select: none;
-}
-
 /* 글래스모피즘 효과 */
 .glass-card {
   background: rgba(18, 32, 24, 0.65);
@@ -72,7 +65,7 @@
 
 /* 부드러운 스크롤바 */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
   background: #060d09;

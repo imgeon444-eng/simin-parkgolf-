@@ -10,12 +10,12 @@ import { Footer } from './components/Footer';
 
 export const App: React.FC = () => {
   return (
-    <div className="min-h-screen bg-[#060d09] text-slate-100 flex flex-col selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen w-full max-w-[100vw] overflow-x-hidden bg-[#060d09] text-slate-100 flex flex-col selection:bg-emerald-500 selection:text-white">
       {/* 상단 GNB 헤더 */}
       <Header />
 
       {/* 메인 콘텐츠 영역 */}
-      <main className="flex-1">
+      <main className="flex-1 w-full max-w-[100vw] overflow-x-hidden">
         {/* 1. Hero 섹션: 구글 플로우 타이틀 & 키네틱 모션 & 350평 하이라이트 */}
         <Hero />
 
