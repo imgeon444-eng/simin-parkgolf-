@@ -9,11 +9,13 @@ import {
   Building2, 
   Monitor, 
   Users,
-  MailCheck
+  MailCheck,
+  MessageSquare
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { createReservation } from '../lib/firebase';
 import { sendAdminEmailNotification } from '../lib/email';
+import { sendCustomerSmsNotification } from '../lib/sms';
 
 export const ReservationSection: React.FC = () => {
   const [selectedFacility, setSelectedFacility] = useState<'outdoor' | 'screen' | 'lesson'>('outdoor');
@@ -69,7 +71,7 @@ export const ReservationSection: React.FC = () => {
 
       setCreatedId(resId);
 
-      // 2. 📧 원장님 Gmail(sonyelin7@gmail.com)로 실시간 알림 이메일 자동 발송 (백그라운드 비동기)
+      // 2. 📧 원장님 Gmail(sonyelin7@gmail.com)로 실시간 알림 이메일 발송
       sendAdminEmailNotification({
         name,
         phone,
@@ -79,6 +81,16 @@ export const ReservationSection: React.FC = () => {
         peopleCount,
         memo,
         reservationId: resId.substring(0, 10).toUpperCase()
+      });
+
+      // 3. 📱 💬 고객 스마트폰으로 솔라피(Solapi) 예약 접수 확인 문자 자동 발송!
+      sendCustomerSmsNotification({
+        name,
+        phone,
+        date: selectedDate,
+        timeSlot: selectedTimeSlot,
+        facilityLabel: facilityLabels[selectedFacility],
+        peopleCount
       });
 
       // 성공 폭죽 효과
@@ -190,7 +202,7 @@ export const ReservationSection: React.FC = () => {
                     예약 신청이 실시간 접수되었습니다!
                   </h3>
                   <p className="text-xs sm:text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
-                    선택하신 <strong className="text-emerald-400">{selectedTimeSlot}</strong> 일정으로 센터 담당자에게 실시간 전송 및 알림이 완료되었습니다.
+                    선택하신 <strong className="text-emerald-400">{selectedTimeSlot}</strong> 일정으로 예약 안내 문자가 고객님의 휴대폰으로 발송되었습니다.
                   </p>
                   
                   <div className="p-4 rounded-2xl bg-black/60 border border-emerald-500/30 max-w-md mx-auto text-left text-xs space-y-1.5 shadow-inner">
@@ -202,9 +214,15 @@ export const ReservationSection: React.FC = () => {
                     <div><span className="text-slate-400">신청 인원:</span> <span className="text-white font-bold">{peopleCount}명</span></div>
                     <div><span className="text-slate-400">예약 일시:</span> <span className="text-emerald-300 font-bold">{selectedDate} / {selectedTimeSlot}</span></div>
                     <div><span className="text-slate-400">선택 시설:</span> <span className="text-white font-semibold">{facilityLabels[selectedFacility]}</span></div>
-                    <div className="pt-1 text-[11px] text-emerald-400 flex items-center gap-1">
-                      <MailCheck className="w-3.5 h-3.5" />
-                      <span>원장님께 실시간 예약 알림이 전달되었습니다.</span>
+                    <div className="pt-2 border-t border-slate-800/80 space-y-1">
+                      <div className="text-[11px] text-emerald-400 flex items-center gap-1.5">
+                        <MessageSquare className="w-3.5 h-3.5" />
+                        <span>고객님 스마트폰으로 확인 문자가 자동 발송되었습니다.</span>
+                      </div>
+                      <div className="text-[11px] text-slate-400 flex items-center gap-1.5">
+                        <MailCheck className="w-3.5 h-3.5 text-emerald-400" />
+                        <span>원장님 CRM 및 지메일로 실시간 전달되었습니다.</span>
+                      </div>
                     </div>
                   </div>
 
@@ -362,13 +380,13 @@ export const ReservationSection: React.FC = () => {
                     disabled={isSubmitting}
                     className="w-full flex items-center justify-center gap-2 py-4 rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-extrabold text-base shadow-[0_0_30px_rgba(16,185,129,0.4)] transition-all hover:scale-[1.01] active:scale-98 shimmer-btn"
                   >
-                    <span>{isSubmitting ? '실시간 예약 접수 및 메일 전송 중...' : '2시간 예약 및 상담 신청하기'}</span>
+                    <span>{isSubmitting ? '실시간 예약 접수 및 확인 문자 전송 중...' : '2시간 예약 및 상담 신청하기'}</span>
                     <ArrowRight className="w-5 h-5" />
                   </button>
 
                   <div className="flex items-center justify-center gap-2 text-[11px] text-slate-400">
                     <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                    <span>신청 즉시 원장님 CRM 시스템 및 지메일로 실시간 안전하게 전송됩니다.</span>
+                    <span>신청 즉시 고객님 폰으로 확인 문자 전송 및 원장님 CRM에 실시간 등록됩니다.</span>
                   </div>
                 </form>
               )}
