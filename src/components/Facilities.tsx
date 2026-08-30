@@ -8,7 +8,6 @@ import {
   CalendarCheck, 
   Check, 
   Sparkles,
-  Phone,
   ArrowUpRight
 } from 'lucide-react';
 
@@ -108,7 +107,7 @@ export const Facilities: React.FC = () => {
     : facilityList.filter(item => item.category === filter);
 
   return (
-    <section id="facilities" className="py-24 px-4 sm:px-6 lg:px-8 relative bg-[#050e08]/60">
+    <section id="facilities" className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 relative bg-[#050e08]/60">
       <div className="max-w-7xl mx-auto">
         {/* 섹션 헤더 */}
         <div className="text-center max-w-3xl mx-auto mb-14">
@@ -124,7 +123,7 @@ export const Facilities: React.FC = () => {
             옥상 350평 실외 숏게임장부터 최신 스크린, 맞춤 레슨, 공식 용품샵, 대여까지 완벽하게 준비되어 있습니다.
           </p>
 
-          {/* 필터 탭 (21st.dev 알약형 탭) */}
+          {/* 필터 탭 */}
           <div className="flex flex-wrap items-center justify-center gap-2 mt-8">
             {[
               { label: '전체 보기', value: 'all' },
@@ -206,34 +205,6 @@ export const Facilities: React.FC = () => {
             );
           })}
         </div>
-
-        {/* 하단 단체 및 대관 안내 배너 */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mt-14 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-emerald-950/90 via-slate-900/90 to-teal-950/90 border border-emerald-500/30 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-2xl"
-        >
-          <div className="space-y-2 text-center sm:text-left">
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-400">
-              <Sparkles className="w-4 h-4" />
-              <span>동호회 / 단체 레슨 / 옥상 350평 대관 환영</span>
-            </div>
-            <h4 className="text-lg sm:text-xl font-bold text-white">
-              단체 예약이나 프라이빗 대관이 필요하신가요?
-            </h4>
-            <p className="text-xs sm:text-sm text-slate-300">
-              인원수와 희망 일정을 말씀해 주시면 최적의 대관 조건과 단체 레슨 혜택을 안내해 드립니다.
-            </p>
-          </div>
-          <a
-            href="tel:010-7467-2080"
-            className="shrink-0 inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold text-sm shadow-[0_0_25px_rgba(16,185,129,0.35)] transition-transform duration-300 hover:scale-105 active:scale-95"
-          >
-            <Phone className="w-4 h-4" />
-            <span>단체 대관 문의: 010-7467-2080</span>
-          </a>
-        </motion.div>
       </div>
     </section>
   );
