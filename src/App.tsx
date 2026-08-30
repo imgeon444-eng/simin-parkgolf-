@@ -3,6 +3,7 @@ import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { OneStopSystem } from './components/OneStopSystem';
 import { Facilities } from './components/Facilities';
+import { PromoSection } from './components/PromoSection';
 import { ReservationSection } from './components/ReservationSection';
 import { LocationSection } from './components/LocationSection';
 import { FloatingCTA } from './components/FloatingCTA';
@@ -28,7 +29,7 @@ export const App: React.FC = () => {
     return <AdminPortal />;
   }
 
-  // 2. 일반 고객용 공식 모션 랜딩페이지 (/) - 고객용 화면에는 관리자 버튼이 전혀 노출되지 않습니다.
+  // 2. 일반 고객용 공식 모션 랜딩페이지 (/)
   return (
     <div className="min-h-screen w-full max-w-[100vw] overflow-x-hidden bg-[#050b07] text-slate-100 flex flex-col selection:bg-emerald-500 selection:text-white">
       {/* 상단 GNB 헤더 */}
@@ -45,10 +46,13 @@ export const App: React.FC = () => {
         {/* 3. 시설 및 프로그램 쇼케이스: 실외/실내/레슨/용품/대여 */}
         <Facilities />
 
-        {/* 4. 실내/실외 2시간 단위 간편 예약 & 운영시간 가이드 */}
+        {/* 4. 🎁 실시간 이벤트/프로모션 전용 섹션 (어드민 On/Off 실시간 연동) */}
+        <PromoSection />
+
+        {/* 5. 실내/실외 2시간 단위 간편 예약 & 운영시간 가이드 */}
         <ReservationSection />
 
-        {/* 5. 오시는 길 & 르네시떼 400대 주차(3시간 무료) 안내 */}
+        {/* 6. 오시는 길 & 르네시떼 400대 주차(3시간 무료) 안내 */}
         <LocationSection />
       </main>
 

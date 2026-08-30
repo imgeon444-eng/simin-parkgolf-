@@ -41,3 +41,19 @@ export interface ReservationData {
   createdAt: string;
   price?: number;
 }
+
+export interface PromoEventItem {
+  id: string;
+  title: string;
+  subtitle: string;
+  discountBadge: string;
+  benefit: string;
+  description: string;
+  icon: string;
+}
+
+export interface EventPromoConfig {
+  isActive: boolean;
+  selectedPresetId: string;
+  updatedAt?: string;
+}

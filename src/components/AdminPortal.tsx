@@ -11,22 +11,23 @@ import {
   Plus, 
   Sparkles, 
   ArrowRight, 
-  ArrowLeft,
-  Search,
-  Filter,
-  RefreshCw,
-  Layers,
-  ShieldCheck,
-  MessageSquare,
-  Copy,
-  Check,
-  ExternalLink,
-  Lock,
-  LogOut,
-  Building2,
-  X,
-  BarChart3,
-  Kanban
+  ArrowLeft, 
+  Search, 
+  Filter, 
+  RefreshCw, 
+  Layers, 
+  ShieldCheck, 
+  MessageSquare, 
+  Copy, 
+  Check, 
+  ExternalLink, 
+  Lock, 
+  LogOut, 
+  Building2, 
+  X, 
+  BarChart3, 
+  Kanban,
+  Gift
 } from 'lucide-react';
 import { 
   subscribeReservations, 
@@ -36,6 +37,7 @@ import {
 } from '../lib/firebase';
 import { ReservationData, ReservationStatus } from '../types';
 import { AdminReports } from './AdminReports';
+import { AdminPromoManager } from './AdminPromoManager';
 
 const COLUMNS: { id: ReservationStatus; title: string; badge: string; color: string; border: string; bg: string }[] = [
   { 
@@ -73,7 +75,7 @@ const COLUMNS: { id: ReservationStatus; title: string; badge: string; color: str
 ];
 
 export const AdminPortal: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'kanban' | 'reports'>('kanban');
+  const [activeTab, setActiveTab] = useState<'kanban' | 'reports' | 'promo'>('kanban');
   const [reservations, setReservations] = useState<ReservationData[]>([]);
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return localStorage.getItem('simin_admin_auth') === 'true';
@@ -199,7 +201,7 @@ export const AdminPortal: React.FC = () => {
 
             <h1 className="text-2xl font-black text-white mb-2">시민파크골프 CRM 관리자</h1>
             <p className="text-xs text-slate-400 mb-6">
-              원장님 전용 실시간 예약 관리 & 비즈니스 리포트 포털입니다.<br />
+              원장님 전용 실시간 예약 관리 & 이벤트 포털입니다.<br />
               (초기 보안 PIN: <strong className="text-emerald-400 font-mono">1234</strong>)
             </p>
 
@@ -261,32 +263,44 @@ export const AdminPortal: React.FC = () => {
               </div>
             </div>
 
-            {/* 탭 전환 스위처 & 액션 버튼들 */}
+            {/* 3대 핵심 탭 스위처 & 액션 버튼들 */}
             <div className="flex items-center gap-2.5 flex-wrap w-full lg:w-auto">
               {/* 21st.dev 스타일 탭 스위처 */}
-              <div className="flex items-center p-1 rounded-2xl bg-black/60 border border-emerald-500/30">
+              <div className="flex items-center p-1 rounded-2xl bg-black/60 border border-emerald-500/30 flex-wrap">
                 <button
                   onClick={() => setActiveTab('kanban')}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all ${
+                  className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all ${
                     activeTab === 'kanban'
                       ? 'bg-emerald-500 text-black shadow-md'
                       : 'text-slate-400 hover:text-white'
                   }`}
                 >
                   <Kanban className="w-4 h-4" />
-                  <span>실시간 칸반 보드</span>
+                  <span>실시간 칸반</span>
                 </button>
 
                 <button
                   onClick={() => setActiveTab('reports')}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all ${
+                  className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all ${
                     activeTab === 'reports'
                       ? 'bg-emerald-500 text-black shadow-md'
                       : 'text-slate-400 hover:text-white'
                   }`}
                 >
                   <BarChart3 className="w-4 h-4" />
-                  <span>데이터 분석 리포트 (방사형 차트)</span>
+                  <span>데이터 리포트</span>
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('promo')}
+                  className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all ${
+                    activeTab === 'promo'
+                      ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-black shadow-md font-black'
+                      : 'text-amber-300 hover:text-white'
+                  }`}
+                >
+                  <Gift className="w-4 h-4" />
+                  <span>이벤트/할인 설정</span>
                 </button>
               </div>
 
@@ -318,13 +332,18 @@ export const AdminPortal: React.FC = () => {
             </div>
           </header>
 
-          {/* 📊 2. 리포트 탭 화면 (방사형 레이더 & 도넛 & 바 차트) */}
-          {activeTab === 'reports' ? (
+          {/* 🎁 3. 이벤트/할인 설정 탭 화면 */}
+          {activeTab === 'promo' ? (
+            <div className="mt-6">
+              <AdminPromoManager />
+            </div>
+          ) : activeTab === 'reports' ? (
+            /* 📊 2. 리포트 탭 화면 (방사형 레이더 & 도넛 & 바 차트) */
             <div className="mt-6">
               <AdminReports reservations={reservations} />
             </div>
           ) : (
-            /* 📋 3. 칸반 보드 화면 */
+            /* 📋 1. 실시간 칸반 보드 화면 */
             <div className="flex-1 flex flex-col mt-6">
               {/* 2. 핵심 KPI 통계 배지 바 */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 mb-6">
