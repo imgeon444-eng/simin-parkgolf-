@@ -5,7 +5,6 @@ const SOLAPI_API_KEY = process.env.SOLAPI_API_KEY || 'NCSW3O74X9V0ASQK';
 const SOLAPI_API_SECRET = process.env.SOLAPI_API_SECRET || 'WBWW4U4MQ1SF2ZLDTJMVZ2TUGNHAEB47';
 const SENDER_PHONE = '01074672080'; // 원장님 등록 발신번호
 
-// 솔라피 v4 HMAC-SHA256 인증 헤더 생성기
 function getSolapiAuthHeader(apiKey: string, apiSecret: string) {
   const date = new Date().toISOString();
   const salt = crypto.randomBytes(16).toString('hex');
@@ -16,7 +15,6 @@ function getSolapiAuthHeader(apiKey: string, apiSecret: string) {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // CORS 허용
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -40,8 +38,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Missing name or phone' });
     }
 
-    // 전화번호에서 숫자만 추출 (예: 010-1234-5678 -> 01012345678)
-    const cleanPhone = phone.replace(/[^0-9]/g, '');
+    // 💡 짝대기(-), 공백 등 모든 특수문자 완벽 제거 -> 순수 숫자 10~11자리만 추출
+    const cleanPhone = String(phone).replace(/[^0-9]/g, '');
+    const cleanSender = String(SENDER_PHONE).replace(/[^0-9]/g, '');
 
     const messageText = `[시민파크골프 예약 접수 완료]
 
@@ -69,7 +68,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       body: JSON.stringify({
         message: {
           to: cleanPhone,
-          from: SENDER_PHONE,
+          from: cleanSender,
           text: messageText,
           type: messageText.length > 90 ? 'LMS' : 'SMS',
           subject: '[시민파크골프] 2시간 예약 접수 안내'
@@ -78,7 +77,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
 
     const result = await solapiResponse.json();
-    console.log('✅ Solapi SMS Send Result:', result);
+    console.log('✅ Solapi SMS Send Result for', cleanPhone, ':', result);
 
     return res.status(200).json({
       success: true,

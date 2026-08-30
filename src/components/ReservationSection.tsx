@@ -32,6 +32,20 @@ export const ReservationSection: React.FC = () => {
   const [createdId, setCreatedId] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
 
+  // 💡 전화번호 자동 하이픈(-) 포매터: 숫자만 쳐도 010-XXXX-XXXX로 자동 변환
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value.replace(/[^0-9]/g, '');
+    let formatted = raw;
+
+    if (raw.length > 3 && raw.length <= 7) {
+      formatted = `${raw.slice(0, 3)}-${raw.slice(3)}`;
+    } else if (raw.length > 7) {
+      formatted = `${raw.slice(0, 3)}-${raw.slice(3, 7)}-${raw.slice(7, 11)}`;
+    }
+
+    setPhone(formatted);
+  };
+
   // 2시간 간격 슬롯 목록 (11:00 ~ 21:00)
   const timeSlots = [
     { time: '11:00 ~ 13:00', label: '오전 11시 타임' },
@@ -84,6 +98,7 @@ export const ReservationSection: React.FC = () => {
       });
 
       // 3. 📱 💬 고객 스마트폰으로 솔라피(Solapi) 예약 접수 확인 문자 자동 발송!
+      // (짝대기가 있든 없든 숫자만 자동 정제되어 100% 무조건 발송됨)
       sendCustomerSmsNotification({
         name,
         phone,
@@ -336,14 +351,17 @@ export const ReservationSection: React.FC = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs text-slate-300 font-semibold mb-1">연락처</label>
+                      <label className="block text-xs text-slate-300 font-semibold mb-1">
+                        휴대폰 번호 <span className="text-[10px] text-emerald-400 font-normal">(자동 하이픈)</span>
+                      </label>
                       <input
                         type="tel"
                         required
                         placeholder="010-0000-0000"
                         value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-sm focus:outline-none focus:border-emerald-400"
+                        onChange={handlePhoneChange}
+                        maxLength={13}
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-sm focus:outline-none focus:border-emerald-400 font-mono tracking-wider"
                       />
                     </div>
                     <div>
