@@ -5,10 +5,11 @@ export interface CustomerSmsPayload {
   timeSlot: string;
   facilityLabel: string;
   peopleCount: string;
+  memo?: string;
 }
 
 /**
- * 🚀 고객 예약 완료 시 고객 스마트폰으로 솔라피(Solapi) 자동 확인 문자(LMS) 전송
+ * 🚀 고객 예약 완료 시 [고객 폰] + [원장님 폰(010-7467-2080)]으로 솔라피(Solapi) 자동 알림 문자 동시 전송
  */
 export const sendCustomerSmsNotification = async (payload: CustomerSmsPayload): Promise<boolean> => {
   try {
@@ -22,7 +23,7 @@ export const sendCustomerSmsNotification = async (payload: CustomerSmsPayload): 
 
     const data = await response.json();
     if (data.success) {
-      console.log('✅ Customer SMS dispatched successfully via Solapi!');
+      console.log('✅ Dual SMS (Customer + Admin) dispatched successfully via Solapi!');
       return true;
     } else {
       console.warn('Solapi SMS dispatch response returned false:', data);

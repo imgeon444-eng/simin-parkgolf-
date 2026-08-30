@@ -32,7 +32,6 @@ export const ReservationSection: React.FC = () => {
   const [createdId, setCreatedId] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
 
-  // 💡 전화번호 자동 하이픈(-) 포매터: 숫자만 쳐도 010-XXXX-XXXX로 자동 변환
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value.replace(/[^0-9]/g, '');
     let formatted = raw;
@@ -46,7 +45,6 @@ export const ReservationSection: React.FC = () => {
     setPhone(formatted);
   };
 
-  // 2시간 간격 슬롯 목록 (11:00 ~ 21:00)
   const timeSlots = [
     { time: '11:00 ~ 13:00', label: '오전 11시 타임' },
     { time: '13:00 ~ 15:00', label: '오후 1시 타임' },
@@ -97,15 +95,15 @@ export const ReservationSection: React.FC = () => {
         reservationId: resId.substring(0, 10).toUpperCase()
       });
 
-      // 3. 📱 💬 고객 스마트폰으로 솔라피(Solapi) 예약 접수 확인 문자 자동 발송!
-      // (짝대기가 있든 없든 숫자만 자동 정제되어 100% 무조건 발송됨)
+      // 3. 📱 💬 [고객 스마트폰] + [원장님 스마트폰 010-7467-2080] 동시 문자 발송!
       sendCustomerSmsNotification({
         name,
         phone,
         date: selectedDate,
         timeSlot: selectedTimeSlot,
         facilityLabel: facilityLabels[selectedFacility],
-        peopleCount
+        peopleCount,
+        memo
       });
 
       // 성공 폭죽 효과
@@ -132,11 +130,9 @@ export const ReservationSection: React.FC = () => {
 
   return (
     <section id="reservation" className="py-24 px-4 sm:px-6 lg:px-8 relative bg-[#050b07]">
-      {/* 배경 글로우 */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-emerald-600/10 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto relative z-10">
-        {/* 섹션 헤더 */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-950/80 border border-emerald-500/30 text-emerald-300 text-xs font-bold mb-3 shadow-inner">
             <Clock className="w-3.5 h-3.5 text-amber-400" />
@@ -230,9 +226,9 @@ export const ReservationSection: React.FC = () => {
                     <div><span className="text-slate-400">예약 일시:</span> <span className="text-emerald-300 font-bold">{selectedDate} / {selectedTimeSlot}</span></div>
                     <div><span className="text-slate-400">선택 시설:</span> <span className="text-white font-semibold">{facilityLabels[selectedFacility]}</span></div>
                     <div className="pt-2 border-t border-slate-800/80 space-y-1">
-                      <div className="text-[11px] text-emerald-400 flex items-center gap-1.5">
+                      <div className="text-[11px] text-emerald-400 flex items-center gap-1.5 font-semibold">
                         <MessageSquare className="w-3.5 h-3.5" />
-                        <span>고객님 스마트폰으로 확인 문자가 자동 발송되었습니다.</span>
+                        <span>고객님 & 원장님 휴대폰으로 확인 문자가 동시 발송되었습니다.</span>
                       </div>
                       <div className="text-[11px] text-slate-400 flex items-center gap-1.5">
                         <MailCheck className="w-3.5 h-3.5 text-emerald-400" />
@@ -347,7 +343,7 @@ export const ReservationSection: React.FC = () => {
                         placeholder="홍길동"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-sm focus:outline-none focus:border-emerald-400"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-emerald-400"
                       />
                     </div>
                     <div>
@@ -361,7 +357,7 @@ export const ReservationSection: React.FC = () => {
                         value={phone}
                         onChange={handlePhoneChange}
                         maxLength={13}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-sm focus:outline-none focus:border-emerald-400 font-mono tracking-wider"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-emerald-400 font-mono tracking-wider"
                       />
                     </div>
                     <div>
@@ -369,7 +365,7 @@ export const ReservationSection: React.FC = () => {
                       <select
                         value={peopleCount}
                         onChange={(e) => setPeopleCount(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-sm focus:outline-none focus:border-emerald-400"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-emerald-400"
                       >
                         <option value="1">1인 (개인 레슨/연습)</option>
                         <option value="2">2인</option>
@@ -388,7 +384,7 @@ export const ReservationSection: React.FC = () => {
                       placeholder="예: 초보 입문 레슨 상담 희망 / 동호회 단체 타석 문의"
                       value={memo}
                       onChange={(e) => setMemo(e.target.value)}
-                      className="w-full px-3.5 py-2 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-xs focus:outline-none focus:border-emerald-400"
+                      className="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs focus:outline-none focus:border-emerald-400"
                     />
                   </div>
 
