@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import crypto from 'crypto';
 
-const SOLAPI_API_KEY = process.env.SOLAPI_API_KEY || 'VOZDPJIGWTCRFEGGXHJ665IWMRQCPIA8';
+const SOLAPI_API_KEY = process.env.SOLAPI_API_KEY || 'NCSW3O74X9V0ASQK';
 const SOLAPI_API_SECRET = process.env.SOLAPI_API_SECRET || 'WBWW4U4MQ1SF2ZLDTJMVZ2TUGNHAEB47';
 const SENDER_PHONE = '01074672080'; // 원장님 등록 발신번호
 
