@@ -4,14 +4,16 @@ import {
   Clock, 
   Phone, 
   CheckCircle2, 
-  ArrowRight,
-  ShieldCheck,
-  Building2,
-  Monitor,
-  Users
+  ArrowRight, 
+  ShieldCheck, 
+  Building2, 
+  Monitor, 
+  Users,
+  MailCheck
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { createReservation } from '../lib/firebase';
+import { sendAdminEmailNotification } from '../lib/email';
 
 export const ReservationSection: React.FC = () => {
   const [selectedFacility, setSelectedFacility] = useState<'outdoor' | 'screen' | 'lesson'>('outdoor');
@@ -53,7 +55,7 @@ export const ReservationSection: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      // Firebase 실시간 예약 DB에 저장
+      // 1. Firebase 실시간 예약 DB에 저장
       const resId = await createReservation({
         facility: selectedFacility,
         facilityLabel: facilityLabels[selectedFacility],
@@ -66,6 +68,18 @@ export const ReservationSection: React.FC = () => {
       });
 
       setCreatedId(resId);
+
+      // 2. 📧 원장님 Gmail(sonyelin7@gmail.com)로 실시간 알림 이메일 자동 발송 (백그라운드 비동기)
+      sendAdminEmailNotification({
+        name,
+        phone,
+        date: selectedDate,
+        timeSlot: selectedTimeSlot,
+        facilityLabel: facilityLabels[selectedFacility],
+        peopleCount,
+        memo,
+        reservationId: resId.substring(0, 10).toUpperCase()
+      });
 
       // 성공 폭죽 효과
       confetti({
@@ -176,7 +190,7 @@ export const ReservationSection: React.FC = () => {
                     예약 신청이 실시간 접수되었습니다!
                   </h3>
                   <p className="text-xs sm:text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
-                    선택하신 <strong className="text-emerald-400">{selectedTimeSlot}</strong> 일정으로 센터 담당자에게 실시간 전송되었습니다.
+                    선택하신 <strong className="text-emerald-400">{selectedTimeSlot}</strong> 일정으로 센터 담당자에게 실시간 전송 및 알림이 완료되었습니다.
                   </p>
                   
                   <div className="p-4 rounded-2xl bg-black/60 border border-emerald-500/30 max-w-md mx-auto text-left text-xs space-y-1.5 shadow-inner">
@@ -188,6 +202,10 @@ export const ReservationSection: React.FC = () => {
                     <div><span className="text-slate-400">신청 인원:</span> <span className="text-white font-bold">{peopleCount}명</span></div>
                     <div><span className="text-slate-400">예약 일시:</span> <span className="text-emerald-300 font-bold">{selectedDate} / {selectedTimeSlot}</span></div>
                     <div><span className="text-slate-400">선택 시설:</span> <span className="text-white font-semibold">{facilityLabels[selectedFacility]}</span></div>
+                    <div className="pt-1 text-[11px] text-emerald-400 flex items-center gap-1">
+                      <MailCheck className="w-3.5 h-3.5" />
+                      <span>원장님께 실시간 예약 알림이 전달되었습니다.</span>
+                    </div>
                   </div>
 
                   <div className="pt-4 flex flex-col sm:flex-row justify-center gap-3">
@@ -344,13 +362,13 @@ export const ReservationSection: React.FC = () => {
                     disabled={isSubmitting}
                     className="w-full flex items-center justify-center gap-2 py-4 rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-extrabold text-base shadow-[0_0_30px_rgba(16,185,129,0.4)] transition-all hover:scale-[1.01] active:scale-98 shimmer-btn"
                   >
-                    <span>{isSubmitting ? '실시간 예약 접수 중...' : '2시간 예약 및 상담 신청하기'}</span>
+                    <span>{isSubmitting ? '실시간 예약 접수 및 메일 전송 중...' : '2시간 예약 및 상담 신청하기'}</span>
                     <ArrowRight className="w-5 h-5" />
                   </button>
 
                   <div className="flex items-center justify-center gap-2 text-[11px] text-slate-400">
                     <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                    <span>신청 즉시 원장님 CRM 시스템으로 실시간 안전하게 전송됩니다.</span>
+                    <span>신청 즉시 원장님 CRM 시스템 및 지메일로 실시간 안전하게 전송됩니다.</span>
                   </div>
                 </form>
               )}

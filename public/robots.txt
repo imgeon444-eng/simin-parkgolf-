@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+
+Sitemap: https://simin-parkgolf.vercel.app/sitemap.xml
